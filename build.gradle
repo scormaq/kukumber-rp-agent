@@ -1,0 +1,56 @@
+buildscript {
+    ext.kotlin_version = '1.2.10'
+    ext.cucumber_version = '2.3.1'
+    ext.log4j2_version = '2.9.1'
+
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven { url 'http://dl.bintray.com/epam/reportportal' }
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.2.10'
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+repositories.addAll(buildscript.repositories)
+
+group = 'com.github.scormaq'
+version = '0.1.0'
+description = 'Kotlin implementation of Cucumber 2.x - ReportPortal 4.x agent'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+idea.module {
+    downloadJavadoc = true
+    downloadSources = true
+}
+
+dependencies {
+    // kotlin
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
+    // cucumber
+    compile "io.cucumber:cucumber-junit:${cucumber_version}"
+    compile "io.cucumber:cucumber-java:${cucumber_version}"
+
+    // Report Portal
+    compile 'com.epam.reportportal:client-java:4.0.2'
+    compile 'com.epam.reportportal:commons-model:4.0.3'
+    compile 'com.epam.reportportal:logger-java-log4j:4.0.1'
+
+    // for testing
+    compile "org.apache.logging.log4j:log4j-slf4j-impl:$log4j2_version"
+    compile "org.apache.logging.log4j:log4j-core:$log4j2_version"
+    testCompile 'junit:junit:4.12'
+}

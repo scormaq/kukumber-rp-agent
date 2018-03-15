@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration strict="true">
+    <Appenders>
+        <Console name="STDOUT">
+            <PatternLayout
+                    pattern="%highlight{[%p][%d{yyyy-MM-dd HH:mm:ss}] %m%n}{ERROR=Bright Red, WARN=Bright Yellow, INFO=Bright Cyan, DEBUG=Bright Green, TRACE=White}"/>
+            <filters>
+                <ThresholdFilter level="DEBUG"/>
+            </filters>
+        </Console>
+        <ReportPortalLog4j2Appender name="RP">
+            <PatternLayout pattern="[%d{HH:mm:ss}] %-5p (%F:%L) - %m%n"/>
+            <filters>
+                <ThresholdFilter level="INFO"/>
+            </filters>
+        </ReportPortalLog4j2Appender>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.github.scormaq" level="DEBUG">
+            <AppenderRef ref="RP"/>
+        </Logger>
+        <Logger name="com.epam.ta.reportportal" level="INFO"/>
+        <Root level="DEBUG">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+    </Loggers>
+</Configuration>
