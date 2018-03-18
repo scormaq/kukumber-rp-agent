@@ -7,6 +7,7 @@ import com.epam.ta.reportportal.ws.model.FinishExecutionRQ
 import com.epam.ta.reportportal.ws.model.FinishTestItemRQ
 import com.epam.ta.reportportal.ws.model.StartTestItemRQ
 import com.epam.ta.reportportal.ws.model.launch.StartLaunchRQ
+import com.epam.ta.reportportal.ws.model.log.SaveLogRQ
 import cucumber.api.Result
 import cucumber.api.TestCase
 import cucumber.api.event.TestStepStarted
@@ -14,6 +15,7 @@ import gherkin.ast.ScenarioDefinition
 import gherkin.ast.Tag
 import io.reactivex.Maybe
 import org.slf4j.LoggerFactory
+import java.io.File
 import java.util.*
 
 internal object RpReporter {
@@ -146,6 +148,29 @@ internal object RpReporter {
             Result.Type.SKIPPED -> Statuses.SKIPPED
             Result.Type.FAILED -> Statuses.FAILED
             else -> Statuses.FAILED
+        }
+    }
+
+    fun sendFailure(result: Result, file: File? = null) {
+        var errorMsg = "${result.error}\n"
+        errorMsg += result.error.stackTrace.reversed().joinToString("\n")
+        sendLog(errorMsg, "ERROR", file)
+    }
+
+    fun sendLog(message: String, level: String = "INFO", file: File? = null) {
+        val saveLog = SaveLogRQ()
+        saveLog.level = level
+        saveLog.logTime = Calendar.getInstance().time
+        saveLog.message = message
+        file?.let {
+            val data = SaveLogRQ.File()
+            data.name = it.name
+            data.content = it.readBytes()
+            saveLog.file = data
+        }
+        ReportPortal.emitLog { item ->
+            saveLog.testItemId = item
+            saveLog
         }
     }
 }

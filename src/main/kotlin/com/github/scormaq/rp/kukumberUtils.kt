@@ -12,9 +12,9 @@ private object tablePrinter : TablePrinter() {
 }
 
 fun prettyPrintTable(step: Step): String? {
-    return step.argument?.takeIf { it is DataTable }?.let { arg ->
+    return (step.argument as? DataTable)?.let { arg ->
         val sb = StringBuilder()
-        tablePrinter.printTable((arg as DataTable).rows.map { it.cells.map { it.value } }, sb)
+        tablePrinter.printTable(arg.rows.map { it.cells.map { it.value } }, sb)
         sb.toString()
     }
 }

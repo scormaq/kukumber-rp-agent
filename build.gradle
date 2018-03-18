@@ -24,7 +24,7 @@ apply plugin: 'idea'
 repositories.addAll(buildscript.repositories)
 
 group = 'com.github.scormaq'
-version = '0.1.0'
+version = '1.0.0'
 description = 'Kotlin implementation of Cucumber 2.x - ReportPortal 4.x agent'
 
 sourceCompatibility = 1.8

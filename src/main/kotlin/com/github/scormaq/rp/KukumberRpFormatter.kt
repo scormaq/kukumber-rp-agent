@@ -8,8 +8,9 @@ import cucumber.api.event.*
 import cucumber.api.formatter.Formatter
 import gherkin.ast.Scenario
 import gherkin.ast.ScenarioOutline
+import java.io.File
 
-class KukumberRpFormatter : Formatter {
+open class KukumberRpFormatter : Formatter {
 
     private var currentFeatureFile: String = ""
     private var featureResult: Result.Type = PASSED
@@ -85,8 +86,16 @@ class KukumberRpFormatter : Formatter {
     }
 
     private fun handleTestStepFinished(event: TestStepFinished) {
+        if (event.result.`is`(Result.Type.FAILED)) {
+            RpReporter.sendFailure(event.result, getFailureData())
+        }
         RpReporter.finishStep(event.result.status)
     }
+
+    /**
+     * Provide implementation for taking files (e.g. screenshots) which are sent to Report Portal on step failure case
+     */
+    protected open fun getFailureData(): File? = null
 
     private fun handleTestCaseFinished(event: TestCaseFinished) {
         when (isScenarioOutlineTest) {
