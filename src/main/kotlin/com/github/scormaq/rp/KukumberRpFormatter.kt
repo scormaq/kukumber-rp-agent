@@ -1,6 +1,5 @@
 package com.github.scormaq.rp
 
-
 import cucumber.api.Result
 import cucumber.api.Result.Type.PASSED
 import cucumber.api.TestCase
@@ -25,6 +24,7 @@ open class KukumberRpFormatter : Formatter {
         publisher.registerHandlerFor(TestCaseStarted::class.java, { handleTestCaseStarted(it) })
         publisher.registerHandlerFor(TestStepStarted::class.java, { handleTestStepStarted(it) })
         publisher.registerHandlerFor(TestStepFinished::class.java, { handleTestStepFinished(it) })
+        publisher.registerHandlerFor(EmbedEvent::class.java, { handleEmbed(it) })
         publisher.registerHandlerFor(TestCaseFinished::class.java, { handleTestCaseFinished(it) })
         publisher.registerHandlerFor(TestRunFinished::class.java, { handleTestRunFinished() })
     }
@@ -96,6 +96,13 @@ open class KukumberRpFormatter : Formatter {
      * Provide implementation for taking files (e.g. screenshots) which are sent to Report Portal on step failure case
      */
     protected open fun getFailureData(): File? = null
+
+    private fun handleEmbed(event: EmbedEvent) {
+        val attachment = createTempFile()
+        attachment.writeBytes(event.data)
+        RpReporter.sendLog(file = attachment)
+        attachment.delete()
+    }
 
     private fun handleTestCaseFinished(event: TestCaseFinished) {
         when (isScenarioOutlineTest) {

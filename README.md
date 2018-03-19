@@ -10,7 +10,9 @@ To see how agent works, do next:
 5. Use `com.github.scormaq.rp.ExtKukumberRpFormatter` instead of `com.github.scormaq.rp.KukumberRpFormatter` to see how screenshots are reported
 
 ### Sending files
-Agent is capable to send files to ReportPortal for different Cucumber events (for now - sending files when step failed). To enable sending files (e.g. screenshots for UI tests) use as plugin your own extension of class `com.github.scormaq.rp.KukumberRpFormatter` with implemented method `fun getFailureData(): File?`
+Agent is capable to send files to ReportPortal, but extra configuration is required:
+* To enable sending files for failed steps (e.g. screenshots for UI tests) use as plugin your own extension of class `com.github.scormaq.rp.KukumberRpFormatter` with implemented method `fun getFailureData(): File?`
+* To send files in regular steps use Cucumber embed events (refer to feature `FeatureWithAttachments.feature` for example)
 
 #### Miscellaneous notes
 * Reporting logs is out of scope of this agent (log4j2 ReportPortal appender used here for testing - refer to `src/main/resources/log4j2.xml` for configuration example);

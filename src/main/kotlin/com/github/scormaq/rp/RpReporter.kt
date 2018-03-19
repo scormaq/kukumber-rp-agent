@@ -157,7 +157,7 @@ internal object RpReporter {
         sendLog(errorMsg, "ERROR", file)
     }
 
-    fun sendLog(message: String, level: String = "INFO", file: File? = null) {
+    fun sendLog(message: String = "", level: String = "INFO", file: File? = null) {
         val saveLog = SaveLogRQ()
         saveLog.level = level
         saveLog.logTime = Calendar.getInstance().time
