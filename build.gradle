@@ -1,6 +1,6 @@
 buildscript {
-    ext.kotlin_version = '1.2.10'
-    ext.cucumber_version = '2.3.1'
+    ext.kotlin_version = '1.3.0'
+    ext.cucumber_version = '2.4.0'
     ext.log4j2_version = '2.9.1'
 
     repositories {
@@ -15,7 +15,7 @@ buildscript {
 }
 
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.2.10'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.0'
 }
 
 apply plugin: 'java'
@@ -45,12 +45,24 @@ dependencies {
     compile "io.cucumber:cucumber-java:${cucumber_version}"
 
     // Report Portal
-    compile 'com.epam.reportportal:client-java:4.0.2'
-    compile 'com.epam.reportportal:commons-model:4.0.3'
+    compile 'com.epam.reportportal:client-java:4.0.8'
+    compile 'com.epam.reportportal:commons-model:4.2.0'
     compile 'com.epam.reportportal:logger-java-log4j:4.0.1'
+
+    compile 'com.epam.reportportal:agent-java-cucumber2:4.0.0'
 
     // for testing
     compile "org.apache.logging.log4j:log4j-slf4j-impl:$log4j2_version"
     compile "org.apache.logging.log4j:log4j-core:$log4j2_version"
     testCompile 'junit:junit:4.12'
 }
+
+test {
+    ignoreFailures = true
+    testLogging {
+        showStandardStreams = true
+        exceptionFormat = 'full'
+    }
+}
+
+gradle.startParameter.continueOnFailure = true
