@@ -3,13 +3,18 @@ package com.github.scormaq.rp
 import cucumber.api.TestCase
 import cucumber.api.event.TestSourceRead
 import cucumber.api.event.TestStepStarted
-import cucumber.runner.UnskipableStep
 import gherkin.AstBuilder
 import gherkin.Parser
 import gherkin.ParserException
 import gherkin.TokenMatcher
-import gherkin.ast.*
-import java.util.*
+import gherkin.ast.Background
+import gherkin.ast.Feature
+import gherkin.ast.GherkinDocument
+import gherkin.ast.Node
+import gherkin.ast.ScenarioDefinition
+import gherkin.ast.ScenarioOutline
+import gherkin.ast.Step
+import java.util.HashMap
 
 /**
  * Suitable copy of class cucumber.runtime.formatter.TestSourcesModel
@@ -35,8 +40,6 @@ internal object TestSourcesModel {
         val astNode: AstNode? = getAstNode(featureFilePath, testCase.line)
         return astNode?.node as? ScenarioDefinition ?: astNode?.parent!!.parent!!.node as ScenarioDefinition
     }
-
-    fun getHookStep(event: TestStepStarted): UnskipableStep = event.testStep as UnskipableStep
 
     fun getStep(featureFilePath: String, event: TestStepStarted): Step {
         return getAstNode(featureFilePath, event.testStep.stepLine)?.node as Step
@@ -64,7 +67,7 @@ internal object TestSourcesModel {
         path?.let {
             try {
                 val gherkinDocument = parser.parse(pathToReadEventMap[it]?.source, matcher)
-                pathToAstMap.put(it, gherkinDocument)
+                pathToAstMap[it] = gherkinDocument
                 val nodeMap = HashMap<Int, AstNode>()
                 val currentParent = AstNode(gherkinDocument.feature, null)
                 for (child in gherkinDocument.feature.children) {
@@ -79,8 +82,8 @@ internal object TestSourcesModel {
 
     private fun processScenarioDefinition(nodeMap: MutableMap<Int, AstNode>, child: ScenarioDefinition, currentParent: AstNode) {
         val childNode = AstNode(child, currentParent)
-        nodeMap.put(child.location.line, childNode)
-        child.steps.forEach { nodeMap.put(it.location.line, AstNode(it, childNode)) }
+        nodeMap[child.location.line] = childNode
+        child.steps.forEach { nodeMap[it.location.line] = AstNode(it, childNode) }
         if (child is ScenarioOutline) {
             processScenarioOutlineExamples(nodeMap, child, childNode)
         }
@@ -91,12 +94,12 @@ internal object TestSourcesModel {
             val examplesNode = AstNode(examples, childNode)
             val headerRow = examples.tableHeader
             val headerNode = AstNode(headerRow, examplesNode)
-            nodeMap.put(headerRow.location.line, headerNode)
+            nodeMap[headerRow.location.line] = headerNode
             for (i in 0 until examples.tableBody.size) {
                 val examplesRow = examples.tableBody[i]
                 val rowNode = ExamplesRowWrapperNode(examplesRow)
                 val expandedScenarioNode = AstNode(rowNode, examplesNode)
-                nodeMap.put(examplesRow.location.line, expandedScenarioNode)
+                nodeMap[examplesRow.location.line] = expandedScenarioNode
             }
         }
     }

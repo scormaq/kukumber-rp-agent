@@ -9,8 +9,8 @@ Feature: Look at menu and order a beverage
   This scenario outline contains only 1 Examples section
 
     Given I see next beverage in my menu:
-      | item name | item price | qty available |
-      | <val 1>   | <val 2>    | <val 3>       |
+      | not parameterized | item name | item price | qty available |
+      | sample text       | <val 1>   | <val 2>    | <val 3>       |
 
     Examples:
       | val 1      | val 2  | val 3 |

@@ -2,7 +2,7 @@ package com.github.scormaq.rp
 
 import java.io.File
 
-class ExtKukumberRpFormatter : KukumberRpFormatter() {
+class ExtKukumberRpScenarioFormatter : KukumberRpScenarioFormatter() {
 
     override fun getFailureData(): File? = takeScreenshot()
 

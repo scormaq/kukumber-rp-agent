@@ -7,11 +7,11 @@ To see how agent works, do next:
 2. Make sure your main test class (in this project - `com.github.scormaq.cucumber.CucumberTestSuite`) contains agent, applied as plugin; 
 3. Run `gradlew test` (be aware that tests contain 1 failure for demo purpose);
 4. Go to your ReportPortal instance and see how launch was reported;
-5. Use `com.github.scormaq.rp.ExtKukumberRpFormatter` instead of `com.github.scormaq.rp.KukumberRpFormatter` to see how screenshots are reported
+5. Use `com.github.scormaq.rp.ExtKukumberRpScenarioFormatter` instead of `com.github.scormaq.rp.KukumberRpScenarioFormatter` to see how screenshots are reported
 
 ### Sending files
 Agent is capable to send files to ReportPortal, but extra configuration is required:
-* To enable sending files for failed steps (e.g. screenshots for UI tests) use as plugin your own extension of class `com.github.scormaq.rp.KukumberRpFormatter` with implemented method `fun getFailureData(): File?`
+* To enable sending files for failed steps (e.g. screenshots for UI tests) use as plugin your own extension of class `com.github.scormaq.rp.KukumberRpScenarioFormatter` with implemented method `fun getFailureData(): File?`
 * To send files in regular steps use Cucumber embed events (refer to feature `FeatureWithAttachments.feature` for example)
 
 #### Miscellaneous notes
